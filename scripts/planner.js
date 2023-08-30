@@ -1416,10 +1416,6 @@ function planner_controller($scope){
 				}
 			}
 			
-			// Fertilizers expire at the beginning of a new season in the greenhouse
-			if (self.plan.greenhouse && (planner.get_season(self.date) != planner.get_season(self.plan.date)))
-				q_mult = 0;
-			
 			// Calculate min/max revenue based on regular/silver/gold chance
 			var regular_chance = planner.player.quality_chance(0, q_mult);
 			var silver_chance = planner.player.quality_chance(1, q_mult);

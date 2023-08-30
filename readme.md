@@ -1,14 +1,34 @@
 # Stardew Valley Crop Planner
 
 A tool for planning crop schedules in the Stardew Valley game.
+This project is a fork from Exnil with Ginger Island implementations by jbuchholz838.
 
-#### **<a href="http://exnil.github.io/crop_planner/">Live version on github.io</a>**
-
-<a href="https://www.reddit.com/r/StardewValley/comments/55puw1/crop_planner_v2_released_multiple_years_importing/" target="_blank">Reddit thread</a>
+#### **[Original live version](http://exnil.github.io/crop_planner/) on github.io from Exnil's project**
+#### **[Original project](https://github.com/exnil/crop_planner/) by Exnil on GitHub**
+#### **[Jbuchholz838's project](https://github.com/jbuchholz838/sdv_crop_planner) on GitHub**
 
 ---
 
-### New in v2
+### My plans for this fork
+* Implement artisan goods planning
+* Add checkboxes to view or hide crops and artisan goods on the calendar
+* Add input modals for artisan goods
+* Add artisan goods in config.json
+
+---
+
+### Implemented in v3 by jbuchholz838
+
+* Ginger Island planning
+* Added new crops as of 1.5 (Rice, Pineapple, Tea Leaves, Taro Root)
+* Added seasonal seeds
+* Visual changes to calendar
+* Added Leo to birthday list
+* Allowed markings of days as completed
+
+---
+
+### Implemented in v2 by Exnil
 
 * Multiple year planning
 * Import/export plans
