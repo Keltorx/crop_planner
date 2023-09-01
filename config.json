@@ -1,4 +1,110 @@
 {
+	"artisan_tools": [
+		{
+			"id": "cheese_press",
+			"name": "Cheese Press",
+			"raw_materials": [
+				"milk",
+				"large_milk",
+				"goat_milk",
+				"large_goat_milk"
+			]
+		},
+		{
+			"id": "loom",
+			"name": "Loom",
+			"raw_materials": [
+				"wool"
+			]
+		},
+		{
+			"id": "mayonnaise_machine",
+			"name": "Mayonnaise Machine",
+			"raw_materials": [
+				"egg",
+				"large_egg",
+				"ostrich_egg",
+				"golden_egg",
+				"duck_egg",
+				"void_egg",
+				"dinosaur_egg"
+			]
+		}
+	],
+	"raw_materials": [
+		{
+			"id": "milk",
+			"name": "Milk",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "large_milk",
+			"name": "Large Milk",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "goat_milk",
+			"name": "Goat Milk",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "large_goat_milk",
+			"name": "Large Goat Milk",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "wool",
+			"name": "Wool",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "egg",
+			"name": "Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "large_egg",
+			"name": "Large Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "ostrich_egg",
+			"name": "Ostrich Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "golden_egg",
+			"name": "Golden Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "duck_egg",
+			"name": "Duck Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "void_egg",
+			"name": "Void Egg",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "dinosaur_egg",
+			"name": "Dinosaur Egg",
+			"buy": 11,
+			"sell": 22
+		}
+	],
 	"crops": [
 		{
 			"buy": 70,
@@ -1087,7 +1193,7 @@
 			{
 				"day": 15,
 				"name": "Night Market",
-				"festival":  true
+				"festival": true
 			},
 			{
 				"day": 16,

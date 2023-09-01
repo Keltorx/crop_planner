@@ -426,6 +426,38 @@
 						<br>
 					</div>
 
+					<!-- artisan goods input section -->
+					<div class="plant_crop">
+						<div class="row">
+							<div class="col-md-4 col-xs-12">
+								<b>Artisan Tool</b><br>
+								<select class="form-control" ng-model="self.newArtisanPlan.artisanTool"
+										ng-options="artisanTool as artisanTool.name for artisanTool in self.artisan_tool_list"
+										ng-change="self.change_raw_materials(self.newArtisanPlan.artisanTool)">
+								</select>
+							</div>
+							<div class="col-md-3 col-xs-4">
+								<b>Raw Material</b><br>
+								<select class="form-control" ng-model="self.newArtisanPlan.rawMaterial"
+										ng-options="rawMaterial.id as rawMaterial.name for rawMaterial in self.temp_raw_materials"
+										ng-disabled="self.is_empty(self.temp_raw_materials)">
+								</select>
+							</div>
+							<div class="col-md-2 col-xs-4">
+								<label>
+									<b>Amount</b><br>
+									<input class="form-control" type="text" ng-model="self.newplan.amount" ng-keypress="self.add_plan_key(self.cdate, $event)">
+								</label>
+							</div>
+							<div class="col-md-3 col-xs-4">
+								<b></b><br>
+								<div class="btn btn-default" ng-click="self.add_plan(self.cdate)"><i class="fa fa-plus"></i> Plant</div>
+								<div class="btn btn-default" ng-click="self.add_plan(self.cdate, true)" data-toggle="tooltip" data-placement="bottom" title="Auto-replant on day of harvest"><i class="fa fa-calendar"></i> Autoplant</div>
+							</div>
+						</div>
+						<br>
+					</div>
+
 					<!-- Events section-->
 					<div ng-show="self.events[self.cdate]">
 						<div class="panel panel-default">

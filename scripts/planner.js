@@ -52,7 +52,12 @@ function planner_controller($scope){
 	self.fertilizer = {}; 				// [fertilizer, fertilizer, ...]
 	self.events = {};					// Birthdays & festivals
 	self.events_list = []				// [{data}, {data}, ...]
-	
+	self.artisan_tool_list = []; 				// List of Artisan Tools [id, id, ...]
+	self.artisan_tools = {}; 					// {id: {data}}
+	self.raw_materials_list = [];
+	self.raw_materials = {};
+	self.temp_raw_materials = [];
+
 	// State objects & variables
 	self.years = [];
 	
@@ -65,6 +70,7 @@ function planner_controller($scope){
 	
 	self.newplan;
 	self.editplan;
+	self.newArtisanPlan;
 	
 	// Core planner functions
 	self.update = update;
@@ -76,6 +82,7 @@ function planner_controller($scope){
 	self.clear_year = clear_year;
 	self.clear_all = clear_all;
 	self.open_plans = open_plans;
+	self.change_raw_materials = change_raw_materials;
 	
 	self.inc_year = inc_year;			// Increment/decrement current year
 	self.inc_season = inc_season;		// Increment/decrement current season
@@ -90,6 +97,7 @@ function planner_controller($scope){
 	self.ci_set_sort = ci_set_sort;		// Set key to sort crop info by
 	self.planner_valid_crops = planner_valid_crops;
 	self.save_data = save_data;
+	self.is_empty = is_empty;
 	
 	// Crop info search/filter settings
 	self.cinfo_settings = {
@@ -172,7 +180,9 @@ function planner_controller($scope){
 		}
 		
 		// Load planner config data
+		$.ajaxSetup({ cache: false });
 		$.ajax({
+			type: "GET",
 			url: "config.json",
 			dataType: "json",
 			success: function(config){
@@ -183,6 +193,20 @@ function planner_controller($scope){
 					crop = new Crop(crop);
 					self.crops_list.push(crop);
 					self.crops[crop.id] = crop;
+				});
+
+				// Process raw material data
+				$.each(self.config.raw_materials, function (i, rawMaterial) {
+					rawMaterial = new RawMaterial(rawMaterial);
+					self.raw_materials_list.push(rawMaterial);
+					self.raw_materials[rawMaterial.id] = rawMaterial;
+				});
+
+				// Process artisan tool data
+				$.each(self.config.artisan_tools, function (i, artisanTool) {
+					artisanTool = new ArtisanTool(artisanTool);
+					self.artisan_tool_list.push(artisanTool);
+					self.artisan_tools[artisanTool.id] = artisanTool;
 				});
 				
 				// Process fertilizer data
@@ -207,6 +231,9 @@ function planner_controller($scope){
 				
 				// Create newplan template
 				self.newplan = new Plan;
+
+				// Create newArtisanPlan template
+				self.newArtisanPlan = new ArtisanPlan;
 				
 				// Load saved plans from browser storage
 				var plan_count = load_data();
@@ -540,6 +567,16 @@ function planner_controller($scope){
 		self.planner_modal.modal();
 		self.cdate = date;
 		self.cday = self.cyear.data.days[date];
+	}
+
+	// Change raw materials options based on selected artisan tool
+	function change_raw_materials(artisanTool) {
+		self.temp_raw_materials = artisanTool.raw_materials;
+	}
+
+	// Change raw materials options based on selected artisan tool
+	function is_empty(array) {
+		return !array || array.length <= 0;
 	}
 	
 	////////////////////////////////
@@ -1130,7 +1167,68 @@ function planner_controller($scope){
 		return "images/crops/"+this.id+".png";
 	};
 	
-	
+	/****************
+		Artisan Tool class - represents an artisan tool
+	****************/
+	function ArtisanTool(data) {
+		var self = this;
+
+		// Config properties
+		self.id;
+		self.name;
+		self.raw_materials = [];
+
+		init();
+
+
+		function init() {
+			if (!data) return;
+
+			// Base properties
+			self.id = data.id;
+			self.name = data.name;
+			data.raw_materials.forEach((rawMaterial) => {
+				self.raw_materials.push(planner.raw_materials_list.find((element) => element.id === rawMaterial));
+			})
+		}
+	}
+
+	// Get thumbnail image
+	ArtisanTool.prototype.get_image = function () {
+		return "images/artisan_tools/" + this.id + ".png";
+	};
+
+	/****************
+		Raw Material class - represents an artisan tool
+	****************/
+	function RawMaterial(data) {
+		var self = this;
+
+		// Config properties
+		self.id;
+		self.name;
+		self.buy;
+		self.sell;
+
+		init();
+
+
+		function init() {
+			if (!data) return;
+
+			// Base properties
+			self.id = data.id;
+			self.name = data.name;
+			self.buy = data.buy;
+			self.sell = data.sell;
+		}
+	}
+
+	// Get thumbnail image
+	ArtisanTool.prototype.get_image = function () {
+		return "images/artisan_tools/" + this.id + ".png";
+	};
+
 	/****************
 		Year class - yearly plans
 	****************/
@@ -1466,8 +1564,8 @@ function planner_controller($scope){
 		if (locale) return value.toLocaleString();
 		return value;
 	};
-	
-	
+
+
 	/****************
 		Plan class - represents seeds planted on a date
 	****************/
@@ -1575,7 +1673,113 @@ function planner_controller($scope){
 		return amount;
 	};
 	
-	
+	/****************
+		Artisan Plan class - represents seeds planted on a date
+	****************/
+	function ArtisanPlan(data) {
+		var self = this;
+		self.date;
+		self.artisanTool = {};
+		self.rawMaterial = {};
+		self.crop = {};
+		self.amount = 1;
+		self.harvests = [];
+		self.greenhouse = false;
+
+
+		init();
+
+
+		function init() {
+			if (!data) return;
+			self.date = data.date;
+			self.crop = planner.crops[data.crop];
+			self.amount = data.amount;
+			if (data.fertilizer && planner.fertilizer[data.fertilizer])
+				self.fertilizer = planner.fertilizer[data.fertilizer];
+			self.greenhouse = in_greenhouse ? true : false;
+		}
+	}
+
+	// Compile data to be saved as JSON
+	Plan.prototype.get_data = function () {
+		var data = {};
+		data.crop = this.crop.id;
+		data.amount = this.amount;
+		if (this.fertilizer && !this.fertilizer.is_none()) data.fertilizer = this.fertilizer.id;
+		return data;
+	};
+
+	Plan.prototype.get_grow_time = function () {
+		var stages = $.extend([], this.crop.stages);
+
+		if (this.fertilizer.id == "speed_gro" || this.fertilizer.id == "delux_speed_gro" || planner.player.agriculturist) {
+			// [SOURCE: StardewValley.TerrainFeatures/HoeDirt.cs : function plant]
+			var rate = 0;
+			switch (this.fertilizer.id) {
+				case "speed_gro":
+					rate = 0.1;
+					break;
+				case "delux_speed_gro":
+					rate = 0.25;
+					break;
+			}
+
+			// Agriculturist profession (ID 5)
+			if (planner.player.agriculturist) rate += 0.1;
+
+			// Days to remove
+			var remove_days = Math.ceil(this.crop.grow * rate);
+
+			// For removing more than one day from larger stages of growth
+			// when there are still days to remove
+			var multi_remove = 0;
+
+			// Remove days from stages
+			while (remove_days > 0 && multi_remove < 3) {
+				for (var i = 0; i < stages.length; i++) {
+					if (i > 0 || stages[i] > 1) {
+						stages[i] -= 1;
+						remove_days--;
+					}
+
+					if (remove_days <= 0) break;
+				}
+
+				multi_remove++;
+			}
+		}
+
+		// Add up days of growth
+		var days = 0;
+		for (var i = 0; i < stages.length; i++) {
+			days += stages[i];
+		}
+
+		return days;
+	};
+
+	Plan.prototype.get_cost = function (locale) {
+		var amount = this.crop.buy * this.amount;
+		if (locale) return amount.toLocaleString();
+		return amount;
+	};
+
+	Plan.prototype.get_revenue = function (locale, max) {
+		var amount = 0;
+		for (var i = 0; i < this.harvests.length; i++) {
+			amount += max ? this.harvests[i].revenue.max : this.harvests[i].revenue.min;
+		}
+		if (locale) return amount.toLocaleString();
+		return amount;
+	};
+
+	Plan.prototype.get_profit = function (locale, max) {
+		var amount = this.get_revenue(max) - this.get_cost();
+		if (locale) return amount.toLocaleString();
+		return amount;
+	};
+
 	/****************
 		Fertilizer class - represents a type of fertilizer
 	****************/
