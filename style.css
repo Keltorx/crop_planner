@@ -1244,3 +1244,11 @@ header .page_title {
     overflow: hidden;
     background-color: #f1f1f1;
 }
+/* custom CSS for artisan goods time selector in modal */
+.time-selector {
+    max-width: 30%;
+    display: inline-block;
+    -webkit-appearance: none; /* makes the arrow disappear */
+    -moz-appearance: none;
+    padding: 6px 0px 6px 10px; /* gives more room for text */
+}

@@ -159,12 +159,18 @@
 						</div>
 
 						<!-- To be planted -->
-						<div ng-show="self.cfarm().plans[date].length" class="items">
+						<div ng-show="self.cfarm().plans[date].length || self.cfarm().artisanPlans[date].length" class="items">
 							<div class="planting">
 								<div class="plan" ng-repeat="plan in self.cfarm().plans[date] | limitTo:10" title="{{(plan.fertilizer.name != 'None' ? plan.crop.name + ' w/' + plan.fertilizer.name : plan.crop.name) + ' (-' + plan.get_cost(1) + 'g)'}}">
-									<img ng-src="{{plan.crop.get_image(1)}}" >
+									<img ng-src="{{plan.crop.get_image(1)}}">
 									<div class="amount" ng-class="{'purple':plan.fertilizer.name != 'None'}">x{{plan.amount}}</div>
 								</div>
+								<div class="plan" ng-repeat="plan in self.cfarm().artisanPlans[date] | limitTo:10" title="{{(plan.rawMaterial.name + ' in' + plan.artisanTool.name)}}">
+									<img ng-src="{{plan.artisanTool.get_image()}}">
+									<img ng-src="{{plan.rawMaterial.get_image()}}">
+									<div class="amount">x{{plan.amount}}</div>
+								</div>
+
 								<div class="more" ng-show="self.cfarm().plans[date].length > 10">{{self.cfarm().plans[date].length-10}} more...</div>
 							</div>
 						</div>
@@ -429,30 +435,74 @@
 					<!-- artisan goods input section -->
 					<div class="plant_crop">
 						<div class="row">
-							<div class="col-md-4 col-xs-12">
+							<div class="col-md-3 col-xs-12">
+								<!-- artisan tool input -->
 								<b>Artisan Tool</b><br>
 								<select class="form-control" ng-model="self.newArtisanPlan.artisanTool"
 										ng-options="artisanTool as artisanTool.name for artisanTool in self.artisan_tool_list"
 										ng-change="self.change_raw_materials(self.newArtisanPlan.artisanTool)">
 								</select>
 							</div>
-							<div class="col-md-3 col-xs-4">
+							<div class="col-md-3 col-xs-12">
+								<!-- raw material input -->
 								<b>Raw Material</b><br>
 								<select class="form-control" ng-model="self.newArtisanPlan.rawMaterial"
-										ng-options="rawMaterial.id as rawMaterial.name for rawMaterial in self.temp_raw_materials"
+										ng-options="rawMaterial as rawMaterial.name for rawMaterial in self.temp_raw_materials"
 										ng-disabled="self.is_empty(self.temp_raw_materials)">
 								</select>
 							</div>
 							<div class="col-md-2 col-xs-4">
-								<label>
-									<b>Amount</b><br>
-									<input class="form-control" type="text" ng-model="self.newplan.amount" ng-keypress="self.add_plan_key(self.cdate, $event)">
-								</label>
+								<!-- time input -->
+								<b>Time</b>
+								<i>(unsure?)</i>
+								<input type="checkbox" 
+									   class="checkbox-inline"
+									   style="margin-top: 0px;"
+									   ng-model="self.newArtisanPlan.isUnsure">
+								<br>
+								<select class="form-control form-inline time-selector"
+										ng-model="self.newArtisanPlan.hour">
+									<option>1</option>
+									<option>2</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+									<option>6</option>
+									<option>7</option>
+									<option>8</option>
+									<option>9</option>
+									<option>10</option>
+									<option>11</option>
+									<option>12</option>
+								</select>
+								<b> : </b>
+								<select class="form-control form-inline time-selector"
+										ng-model="self.newArtisanPlan.minute">
+									<option>00</option>
+									<option>10</option>
+									<option>20</option>
+									<option>30</option>
+									<option>40</option>
+									<option>50</option>
+								</select>
+								<select class="form-control form-inline time-selector"
+										ng-model="self.newArtisanPlan.isAM">
+									<option>AM</option>
+									<option>PM</option>
+								</select>
+							</div>
+							<div class="col-md-1 col-xs-4">
+								<!-- amount input -->
+								<b>Amount</b><br>
+								<input class="form-control ng-pristine ng-valid ng-not-empty ng-touched"
+									   type="text"
+									   ng-model="self.newArtisanPlan.amount"
+									   ng-keypress="self.add_plan_key(self.cdate, $event)">
 							</div>
 							<div class="col-md-3 col-xs-4">
 								<b></b><br>
-								<div class="btn btn-default" ng-click="self.add_plan(self.cdate)"><i class="fa fa-plus"></i> Plant</div>
-								<div class="btn btn-default" ng-click="self.add_plan(self.cdate, true)" data-toggle="tooltip" data-placement="bottom" title="Auto-replant on day of harvest"><i class="fa fa-calendar"></i> Autoplant</div>
+								<div class="btn btn-default" ng-click="self.add_plan(self.cdate, false, true)"><i class="fa fa-plus"></i> Plant</div>
+								<div class="btn btn-default" ng-click="self.add_plan(self.cdate, true, true)" data-toggle="tooltip" data-placement="bottom" title="Auto-replant on day of harvest"><i class="fa fa-calendar"></i> Autoplant</div>
 							</div>
 						</div>
 						<br>
@@ -481,7 +531,7 @@
 					<div ng-show="!self.events[self.cdate]" class="text-muted"><i class="fa fa-users"></i> No events.<hr></div>
 
 					<!-- Planting section -->
-					<div ng-show="self.cfarm().plans[self.cdate].length">
+					<div ng-show="self.cfarm().plans[self.cdate].length || self.cfarm().artisanPlans[self.cdate].length">
 						<div class="panel panel-default">
 
 							<div class="panel-heading row">
@@ -536,6 +586,46 @@
 												<div ng-show="self.editplan==plan" class="btn btn-success" ng-click="self.edit_plan(plan, 1)"><i class="fa fa-save"></i></div>
 											</td>
 											<td><div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index)"><i class="fa fa-trash"></i></div></td>
+										</tr>
+									</tbody>
+								</table>
+								<!-- Artisan Making Table section -->
+								<table class="crops table table-condensed">
+									<thead>
+										<tr>
+											<th colspan="2">Crop</th>
+											<th>Amount</th>
+											<th>Fertilizer</th>
+											<th>Cost</th>
+											<th><i class="fa fa-clock-o"></i> Days</th>
+											<th><i class="fa fa-refresh"></i> Regrows</th>
+											<th width="1"></th>
+											<th width="1"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="crop" ng-repeat="plan in self.cfarm().artisanPlans[self.cdate]">
+											<td width="1">
+												<img ng-src="{{plan.artisanTool.get_image()}}">
+											</td>
+											<td>{{plan.artisanTool.name}}</td>
+											<td>
+												<span>x{{plan.amount}}</span>
+											</td>
+											<td>
+												<img ng-src="{{plan.rawMaterial.get_image()}}">
+												{{plan.rawMaterial.name}}
+											</td>
+											<td></td>
+											<td></td>
+											<td></td>
+											<td>
+												<div ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
+												<div ng-show="self.editplan==plan" class="btn btn-success" ng-click="self.edit_plan(plan, 1)"><i class="fa fa-save"></i></div>
+											</td>
+											<td>
+												<div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index)"><i class="fa fa-trash"></i></div>
+											</td>
 										</tr>
 									</tbody>
 								</table>

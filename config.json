@@ -3,6 +3,7 @@
 		{
 			"id": "cheese_press",
 			"name": "Cheese Press",
+			"processing_time": 200,
 			"raw_materials": [
 				"milk",
 				"large_milk",
@@ -13,6 +14,7 @@
 		{
 			"id": "loom",
 			"name": "Loom",
+			"processing_time": 240,
 			"raw_materials": [
 				"wool"
 			]
@@ -20,6 +22,7 @@
 		{
 			"id": "mayonnaise_machine",
 			"name": "Mayonnaise Machine",
+			"processing_time": 200,
 			"raw_materials": [
 				"egg",
 				"large_egg",
@@ -103,6 +106,69 @@
 			"name": "Dinosaur Egg",
 			"buy": 11,
 			"sell": 22
+		}
+	],
+	"artisan_goods": [
+		{
+			"id": "cheese",
+			"name": "Cheese",
+			"artisan_tool": "cheese_press",
+			"ingredients": [
+				"milk",
+				"large_milk"
+			]
+		},
+		{
+			"id": "goat_cheese",
+			"name": "Goat Cheese",
+			"artisan_tool": "cheese_press",
+			"ingredients": [
+				"goat_milk",
+				"large_goat_milk"
+			]
+		},
+		{
+			"id": "cloth",
+			"name": "Cloth",
+			"artisan_tool": "loom",
+			"ingredients": [
+				"wool"
+			]
+		},
+		{
+			"id": "mayonnaise",
+			"name": "Mayonnaise",
+			"artisan_tool": "mayonnaise_machine",
+			"ingredients": [
+				"egg",
+				"large_egg",
+				"ostrich_egg",
+				"golden_egg"
+			]
+		},
+		{
+			"id": "duck_mayonnaise",
+			"name": "Duck Mayonnaise",
+			"artisan_tool": "mayonnaise_machine",
+			"ingredients": [
+				"duck_egg"
+			]
+		},
+		{
+			"id": "void_mayonnaise",
+			"name": "Void Mayonnaise",
+			"artisan_tool": "mayonnaise_machine",
+			"ingredients": [
+				"void_egg"
+			]
+		},
+		{
+			"id": "dinosaur_mayonnaise",
+			"name": "Dinosaur Mayonnaise",
+			"artisan_tool": "mayonnaise_machine",
+			"ingredients": [
+				"dinosaur_egg"
+			]
 		}
 	],
 	"crops": [
