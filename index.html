@@ -161,26 +161,29 @@
 						<!-- To be planted -->
 						<div ng-show="self.cfarm().plans[date].length || self.cfarm().artisanPlans[date].length" class="items">
 							<div class="planting">
-								<div class="plan" ng-repeat="plan in self.cfarm().plans[date] | limitTo:10" title="{{(plan.fertilizer.name != 'None' ? plan.crop.name + ' w/' + plan.fertilizer.name : plan.crop.name) + ' (-' + plan.get_cost(1) + 'g)'}}">
-									<img ng-src="{{plan.crop.get_image(1)}}">
-									<div class="amount" ng-class="{'purple':plan.fertilizer.name != 'None'}">x{{plan.amount}}</div>
+								<div class="plan" ng-repeat="plan in self.cfarm().get_all_plans(date) | limitTo:self.cfarm().count_showable_plans(date)">
+									<div ng-if="plan.crop" title="{{(plan.fertilizer.name != 'None' ? plan.crop.name + ' w/' + plan.fertilizer.name : plan.crop.name) + ' (-' + plan.get_cost(1) + 'g)'}}">
+										<img ng-src="{{plan.crop.get_image(1)}}">
+										<div class="amount" ng-class="{'purple':plan.fertilizer.name != 'None'}">x{{plan.amount}}</div>
+									</div>
+									<img ng-if="plan.artisanTool" ng-src="{{plan.artisanTool.get_image()}}">
+									<img ng-if="plan.artisanTool" ng-src="{{plan.rawMaterial.get_image()}}">
+									<div ng-if="plan.artisanTool" class="amount">x{{plan.amount}}</div>
 								</div>
-								<div class="plan" ng-repeat="plan in self.cfarm().artisanPlans[date] | limitTo:10" title="{{(plan.rawMaterial.name + ' in' + plan.artisanTool.name)}}">
-									<img ng-src="{{plan.artisanTool.get_image()}}">
-									<img ng-src="{{plan.rawMaterial.get_image()}}">
-									<div class="amount">x{{plan.amount}}</div>
-								</div>
-
-								<div class="more" ng-show="self.cfarm().plans[date].length > 10">{{self.cfarm().plans[date].length-10}} more...</div>
+								<div class="more" ng-show="self.cfarm().get_all_plans(date).length > self.cfarm().count_showable_plans(date)">{{self.cfarm().get_all_plans(date).length-self.cfarm().count_showable_plans(date)}} more...</div>
 							</div>
 						</div>
 
 						<!-- To be harvested -->
 						<div ng-show="self.cfarm().harvests[date].length" class="harvestingouter">
 							<div class="harvesting">
-								<div class="plan" ng-repeat="harvest in self.cfarm().harvests[date] | limitTo:10" title="{{harvest.crop.name}}">
-									<img ng-src="{{harvest.crop.get_image()}}">
-									<div class="amount">x{{harvest.yield.min}}</div>
+								<div class="plan" ng-repeat="harvest in self.cfarm().harvests[date] | limitTo:10">
+									<div title="{{harvest.get_title()}}">
+										<img ng-if="harvest.crop" ng-src="{{harvest.crop.get_image()}}">
+										<div ng-if="harvest.crop" class="amount">x{{harvest.yield.min}}</div>
+									</div>
+									<img ng-if="harvest.artisanGood" ng-src="{{harvest.artisanGood.get_image()}}">
+									<div ng-if="harvest.artisanGood" class="amount">x{{harvest.yield}}</div>
 								</div>
 								<div class="more" ng-show="self.cfarm().harvests[date].length > 10">{{self.cfarm().harvests[date].length-10}} more...</div>
 							</div>
@@ -538,13 +541,13 @@
 								<div class="col-md-6">
 									<h3 class="panel-title"><i class="fa fa-tint"></i> Planting</h3>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-6" ng-if="self.cfarm().plans[self.cdate].length>0">
 									<h3 class="panel-title panel-financial">{{self.cfarm().totals.day[self.cdate].cost==0 && '-' || ''}}{{self.cfarm().totals.day[self.cdate].get_cost(1)}}g</h3>
 								</div>
 							</div>
 
 							<div class="panel-body">
-								<table class="crops table table-condensed">
+								<table ng-show="self.cfarm().plans[self.cdate].length" class="crops table table-condensed">
 									<thead>
 										<tr>
 											<th colspan="2">Crop</th>
@@ -585,12 +588,12 @@
 												<div ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
 												<div ng-show="self.editplan==plan" class="btn btn-success" ng-click="self.edit_plan(plan, 1)"><i class="fa fa-save"></i></div>
 											</td>
-											<td><div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index)"><i class="fa fa-trash"></i></div></td>
+											<td><div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index, 0)"><i class="fa fa-trash"></i></div></td>
 										</tr>
 									</tbody>
 								</table>
 								<!-- Artisan Making Table section -->
-								<table class="crops table table-condensed">
+								<table ng-show="self.cfarm().artisanPlans[self.cdate].length" class="crops table table-condensed">
 									<thead>
 										<tr>
 											<th colspan="2">Crop</th>
@@ -598,7 +601,6 @@
 											<th>Fertilizer</th>
 											<th>Cost</th>
 											<th><i class="fa fa-clock-o"></i> Days</th>
-											<th><i class="fa fa-refresh"></i> Regrows</th>
 											<th width="1"></th>
 											<th width="1"></th>
 										</tr>
@@ -616,15 +618,17 @@
 												<img ng-src="{{plan.rawMaterial.get_image()}}">
 												{{plan.rawMaterial.name}}
 											</td>
-											<td></td>
-											<td></td>
-											<td></td>
+											<td>{{self.display_time(plan.hour,plan.minute)}}</td>
+											<td title="{{plan.display_processing_time_title()}}">
+												{{plan.processingTime}} min. 
+												<i ng-if="plan.display_processing_time_title()" class="fa fa-info-circle"></i>
+											</td>
 											<td>
-												<div ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
+												<div ng-disabled="true" ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
 												<div ng-show="self.editplan==plan" class="btn btn-success" ng-click="self.edit_plan(plan, 1)"><i class="fa fa-save"></i></div>
 											</td>
 											<td>
-												<div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index)"><i class="fa fa-trash"></i></div>
+												<div class="btn btn-default" ng-click="self.remove_plan(self.cdate, $index, 1)"><i class="fa fa-trash"></i></div>
 											</td>
 										</tr>
 									</tbody>
@@ -646,7 +650,7 @@
 								</div>
 							</div>
 							<div class="panel-body">
-								<table class="crops table table-condensed">
+								<table ng-show="self.cfarm().get_harvests(self.cdate, 0).length" class="crops table table-condensed">
 									<thead>
 										<tr>
 											<th colspan="2">Crop</th>
@@ -657,7 +661,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<tr class="crop" ng-repeat="harvest in self.cfarm().harvests[self.cdate]">
+										<tr class="crop" ng-repeat="harvest in self.cfarm().get_harvests(self.cdate, 0)">
 											<td width="1">
 												<img ng-src="{{harvest.crop.get_image()}}">
 											</td>
@@ -687,6 +691,35 @@
 												</span>
 											</td>
 											<td>{{harvest.crop.regrow && harvest.crop.regrow+' days' || ''}}</td>
+										</tr>
+									</tbody>
+								</table>
+								<table ng-show="self.cfarm().get_harvests(self.cdate, 1).length" class="crops table table-condensed">
+									<thead>
+										<tr>
+											<th colspan="2">Artisan Good</th>
+											<th>Yield</th>
+											<th>Finish Time</th>
+											<th>Profit</th>
+											<th><i class="fa fa-refresh"></i> Regrows</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr class="crop" ng-repeat="harvest in self.cfarm().get_harvests(self.cdate, 1)">
+											<td width="1">
+												<img ng-src="{{harvest.artisanGood.get_image()}}">
+											</td>
+											<td>{{harvest.artisanGood.name}}</td>
+											<td>
+												<span>x{{harvest.yield}}</span>
+											</td>
+											<td>
+												{{self.display_time(harvest.hour,harvest.minute)}}
+											</td>
+											<td>
+												
+											</td>
+											<td></td>
 										</tr>
 									</tbody>
 								</table>

@@ -142,7 +142,11 @@
 			"ingredients": [
 				"egg",
 				"large_egg",
-				"ostrich_egg",
+				{
+					"id": "ostrich_egg",
+					"processing_time" :  30
+				},
+				
 				"golden_egg"
 			]
 		},
@@ -167,7 +171,10 @@
 			"name": "Dinosaur Mayonnaise",
 			"artisan_tool": "mayonnaise_machine",
 			"ingredients": [
-				"dinosaur_egg"
+				{
+					"id": "dinosaur_egg",
+					"processing_time" :  4620
+				}
 			]
 		}
 	],
