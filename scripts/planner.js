@@ -73,6 +73,7 @@ function planner_controller($scope){
 	self.newplan;
 	self.editplan;
 	self.newArtisanPlan;
+	self.editOriginalPlan = {}; // save plan details before edit
 	
 	// Core planner functions
 	self.update = update;
@@ -161,8 +162,40 @@ function planner_controller($scope){
 		// On modal close: save plans and update
 		self.planner_modal.on("hide.bs.modal", function(){
 			// Only if currently editing
-			if (self.editplan){
+			if (self.editplan) {
+				var invalid = false;
+				if (self.editplan instanceof Plan) {
+					if (self.editplan.amount <= 0 ||
+						typeof self.editplan.amount !== 'number') {
+						alert("Invalid data entered. Reverting changes to previous plan you edited...");
+						self.editplan.amount = self.editOriginalPlan.amount;
+						self.editplan.fertilizer = self.editOriginalPlan.fertilizer;
+						invalid = true;
+					}
+					self.editplan.crop = invalid ? self.editOriginalPlan.crop : planner.crops[self.editplan.crop_id];
+					delete self.editplan.crop_id;
+				}
+
+				else if (self.editplan instanceof ArtisanPlan) {
+					if (!self.editplan.is_valid(true)) {
+						alert("Invalid data entered. Reverting changes to previous plan you edited...");
+						self.editplan.artisanTool = self.editOriginalPlan.artisanTool;
+						self.editplan.rawMaterial = self.editOriginalPlan.rawMaterial;
+						self.editplan.amount = self.editOriginalPlan.amount;
+						self.editplan.isAM = self.editOriginalPlan.isAM;
+						invalid = true;
+					}
+					self.editplan.hour = invalid ? self.editOriginalPlan.calculate_hour() : self.editplan.calculate_hour();
+					self.editplan.minute = invalid ? parseInt(self.editOriginalPlan.minute) : parseInt(self.editplan.minute);
+					self.editplan.artisanGood = invalid ? self.editOriginalPlan.artisanGood : self.editplan.get_artisan_good();
+					self.editplan.processingTime = invalid ? self.editOriginalPlan.processingTime : self.editplan.get_processing_time();
+					delete self.editplan.isAM;
+				}
+
 				self.editplan = null;
+				self.editOriginalPlan = {};
+
+				save_data();
 				self.update(self.cyear);
 				$scope.$apply();
 			}
@@ -549,11 +582,10 @@ function planner_controller($scope){
 			return;
 		}
 		var planToAdd = isArtisan ? self.newArtisanPlan : self.newplan;
-		self.cyear.add_plan(planToAdd, date, auto_replant);
-		if (!isArtisan) {
+		if (!isArtisan && self.cyear.add_plan(planToAdd, date, auto_replant)) {
 			self.newplan = new Plan;
 		}
-		else if (isArtisan) {
+		else if (isArtisan && self.cyear.add_plan(planToAdd, date, auto_replant)) {
 			self.newArtisanPlan = new ArtisanPlan;
 		}
 	}
@@ -607,18 +639,71 @@ function planner_controller($scope){
 	
 	// Edit plan
 	// mode: 0 = plan; 1 = artisanPlan;
-	function edit_plan(plan, save){
-		if (save){
-			self.editplan = null;
+	// go to self.planner_modal.on for edits on dismissing modal
+	function edit_plan(plan, save) {
+		if (save || self.editplan) {
+			var invalid = false;
+			if (self.editplan instanceof Plan) {
+				if (self.editplan.amount <= 0 ||
+					typeof self.editplan.amount !== 'number') {
+					if (save) {
+						alert("Please fill in the necessary data.");
+						return;
+					}
+					else {
+						alert("Invalid data entered. Reverting changes to previous plan you edited...");
+						self.editplan.amount = self.editOriginalPlan.amount;
+						self.editplan.fertilizer = self.editOriginalPlan.fertilizer;
+						invalid = true;
+					}
+				}
+				self.editplan.crop = invalid ? self.editOriginalPlan.crop : planner.crops[self.editplan.crop_id];
+				delete self.editplan.crop_id;
+			}
+
+			else if (self.editplan instanceof ArtisanPlan) {
+				if (!self.editplan.is_valid(true)) {
+					if (save) {
+						self.editplan.is_valid();
+						return;
+					}
+					else {
+						alert("Invalid data entered. Reverting changes to previous plan you edited...");
+						self.editplan.artisanTool = self.editOriginalPlan.artisanTool;
+						self.editplan.rawMaterial = self.editOriginalPlan.rawMaterial;
+						self.editplan.amount = self.editOriginalPlan.amount;
+						self.editplan.isAM = self.editOriginalPlan.isAM;
+						invalid = true;
+					}
+				}
+				self.editplan.hour = invalid ? self.editOriginalPlan.calculate_hour() : self.editplan.calculate_hour();
+				self.editplan.minute = invalid ? parseInt(self.editOriginalPlan.minute) : parseInt(self.editplan.minute);
+				self.editplan.artisanGood = invalid ? self.editOriginalPlan.artisanGood : self.editplan.get_artisan_good();
+				self.editplan.processingTime = invalid ? self.editOriginalPlan.processingTime : self.editplan.get_processing_time();
+				delete self.editplan.isAM;
+			}
+
 			save_data();
 			update(self.cyear);
-			return;
-		} else if (self.editplan){
-			// Other edit already open
-			save_data();
-			update(self.cyear);
+			if (save) {
+				self.editplan = null;
+				self.editOriginalPlan = {};
+				return;
+			}
 		}
-		
+
+		if (plan instanceof Plan) {
+			plan.crop_id = plan.crop.id;
+		}
+		else if (plan instanceof ArtisanPlan) {
+			var editTime = self.display_time(plan.hour, plan.minute, true);
+			plan.hour = editTime.hour;
+			plan.minute = editTime.minute;
+			plan.isAM = editTime.isAM;
+			self.change_raw_materials(plan.artisanTool);
+		}
+
+		self.editOriginalPlan = plan.clone();
 		self.editplan = plan;
 	}
 	
@@ -674,7 +759,7 @@ function planner_controller($scope){
 		self.temp_raw_materials = artisanTool.rawMaterials;
 	}
 
-	// Change raw materials options based on selected artisan tool
+	// Check if array is empty
 	function is_empty(array) {
 		return !array || array.length <= 0;
 	}
@@ -809,7 +894,7 @@ function planner_controller($scope){
 		return crop.can_grow(self.cseason, true) || self.in_greenhouse();
 	}
 
-	function display_time(hour, minute) {
+	function display_time(hour, minute, isGetHourMin) {
 		var displayHour = hour;
 		var displayMinute = minute === 0 ? "00" : minute.toString();
 		var isAM = hour >= 12 ? "PM" : "AM";
@@ -817,6 +902,12 @@ function planner_controller($scope){
 		if (hour > 12) displayHour -= 12;
 		displayHour = displayHour.toString();
 		var result = displayHour + ":" + displayMinute + " " + isAM;
+		if (isGetHourMin) {
+			result = {};
+			result.hour = displayHour;
+			result.minute = displayMinute;
+			result.isAM = isAM;
+		}
 		return result;
 	}
 	
@@ -1040,6 +1131,7 @@ function planner_controller($scope){
 		// Miscellaneous client settings
 		self.settings = {
 			show_events: true,
+			show_artisan_tool: true
 		};
 		
 		
@@ -1059,7 +1151,16 @@ function planner_controller($scope){
 			if (pdata.tiller) self.tiller = true;
 			if (pdata.agriculturist) self.agriculturist = true;
 			if (pdata.level) self.level = pdata.level;
-			if (pdata.settings) self.settings = pdata.settings;
+			if (pdata.settings) {
+				for (var setting in self.settings) {
+					if (self.settings.hasOwnProperty(setting)) {
+						if (typeof pdata.settings[setting] !== "undefined")
+							self.settings[setting] = pdata.settings[setting];
+						else
+							self.settings[setting] = true;
+					}
+				}
+			}
 		}
 		
 		// Save player config to browser storage
@@ -1517,18 +1618,7 @@ function planner_controller($scope){
 		}
 		// Artisan goods input
 		if (newplan instanceof ArtisanPlan) {
-			if (!newplan.artisanTool.id ||
-				!newplan.rawMaterial.id ||
-				!newplan.hour ||
-				!newplan.minute ||
-				!newplan.isAM) {
-				alert("Please fill in the necessary data.");
-				return false;
-			} 
-			if (newplan.hour > 1 && newplan.hour < 6 && newplan.isAM === 'AM') {
-				alert("You cannot process an artisan good at this time.");
-				return false;
-			}
+			if (!newplan.is_valid()) return false;
 		}
 		// Date out of bounds
 		if (date < 1 || date > YEAR_DAYS) return false;
@@ -1567,11 +1657,13 @@ function planner_controller($scope){
 				// Auto-replant
 				this.add_plan(newplan, next_planting, true);
 			}
+			return true;
 		}
 		else if (plan instanceof ArtisanPlan) {
 			this.farm().artisanPlans[date].push(plan);
 			update(this);
 			save_data();
+			return true;
 		}
 	};
 	
@@ -1689,7 +1781,10 @@ function planner_controller($scope){
 		});
 
 		self.artisanPlans[date].forEach((plan) => {
-			total+=2;
+			if (planner.player.settings.show_artisan_tool)
+				total += 2;
+			else
+				total += 1;
 			if (total <= 10) {
 				count++;
 			}
@@ -1965,6 +2060,19 @@ function planner_controller($scope){
 		if (this.fertilizer && !this.fertilizer.is_none()) data.fertilizer = this.fertilizer.id;
 		return data;
 	};
+
+	Plan.prototype.clone = function () {
+		var resultPlan = new Plan(this.get_data());
+		var self = this;
+		resultPlan.date = self.date;
+		resultPlan.crop_id = self.crop_id;
+		resultPlan.crop = self.crop;
+		resultPlan.amount = self.amount;
+		resultPlan.fertilizer = self.fertilizer;
+		resultPlan.harvests = self.harvests;
+		resultPlan.greenhouse = self.greenhouse;
+		return resultPlan;
+	}
 	
 	Plan.prototype.get_grow_time = function(){
 		var stages = $.extend([], this.crop.stages);
@@ -2084,7 +2192,7 @@ function planner_controller($scope){
 			else if (data.rawMaterial) self.rawMaterial = data.rawMaterial;
 
 			if (typeof data.hour !== 'undefined') self.hour = parseInt(data.hour);
-			else if (data.isAM || self.isAM) self.hour = data.isAM ? self.calculate_hour(data.isAM) : self.calculate_hour(self.isAM);
+			// else if (data.isAM || self.isAM) self.hour = data.isAM ? self.calculate_hour(data.isAM) : self.calculate_hour(self.isAM);
 			if (typeof data.minute !== 'undefined') self.minute = parseInt(data.minute);
 			self.artisanGood = self.get_artisan_good();
 			self.processingTime = data.processingTime ? data.processingTime : self.get_processing_time();
@@ -2107,26 +2215,66 @@ function planner_controller($scope){
 			}
 		});
 
-		var withEst = false;
 		var result = "";
-		time = [days, hours, minutes];
-		time.forEach((value, i) => {
-			if (value !== 0) {
-				if (!withEst) {
-					if (i !== 2) {
-						result += " (Est. ";
-						withEst = true;
-					}
-				} else {
-					result += ", ";
-				}
-				if (i === 0) result = result + days.toString() + "d";
-				else if (i === 1) result = result + hours.toString() + "h";
-				else if (i === 2 && withEst) result = result + minutes.toString() + "m";
+		var endData = this.get_end_data();
+		var timeEst = [days, hours, minutes];
+		var timeAct = [endData.dayProgress, endData.hourProgress, endData.minuteProgress];
+		time = [timeEst, timeAct];
+		time.forEach((EstAct, EstActIndex) => {
+			var withEst = false;
+			if (EstActIndex === 0) {
+				var estActString = "Est.: ";
+			} else if (EstActIndex === 1) {
+				var estActString = "Act.: ";
 			}
+			EstAct.forEach((dayHourProg, dayHourProgIndex) => {
+				if (dayHourProg !== 0) {
+					if (!withEst) {
+						if (dayHourProgIndex !== 2) {
+							result += estActString;
+							withEst = true;
+						}
+					} else {
+						result += ", ";
+					}
+					if (dayHourProgIndex === 0) result = result + dayHourProg.toString() + "d";
+					else if (dayHourProgIndex === 1) result = result + dayHourProg.toString() + "h";
+					else if (dayHourProgIndex === 2 && withEst) result = result + dayHourProg.toString() + "m";
+				}
+			});
+			if (withEst) result += "\n";
 		});
 
-		if (withEst) result += ")";
+		if (endData.date === planner.cdate) result += "Expect " + this.artisanGood.name + " today";
+		else if (endData.date === planner.cdate + 1) result += "Expect " + this.artisanGood.name + " tomorrow, " + planner.get_date(endData.date, '%l the %j%S') + ",";
+		else result += "Expect " + this.artisanGood.name + " on " + planner.get_date(endData.date, '%F, %l the %j%S') + ",";
+
+		result += " at " + planner.display_time(endData.hour, endData.minute);
+		return result;
+	}
+
+	ArtisanPlan.prototype.is_valid = function (disableMessages) {
+		var result = true;
+		if (!this.artisanTool ||
+			!this.rawMaterial ||
+			this.amount <= 0 ||
+			typeof this.amount !== 'number') {
+			if (!disableMessages) alert("Please fill in the necessary data.");
+			result = false;
+		}
+		else if (!this.artisanTool.id ||
+			!this.rawMaterial.id ||
+			!this.hour ||
+			!this.minute ||
+			!this.isAM) {
+			if (!disableMessages) alert("Please fill in the necessary data.");
+			result = false;
+		}
+		if (this.hour > 1 && this.hour < 6 && this.isAM === 'AM') {
+			if (!disableMessages) alert("You cannot process an artisan good at this time.");
+			result = false;
+		}
+
 		return result;
 	}
 
@@ -2136,10 +2284,27 @@ function planner_controller($scope){
 		data.artisanTool = this.artisanTool.id;
 		data.rawMaterial = this.rawMaterial.id;
 		data.amount = this.amount;
-		data.hour = this.calculate_hour(this.isAM);
+		data.hour = this.calculate_hour();
 		data.minute = parseInt(this.minute);
 		return data;
 	};
+
+	ArtisanPlan.prototype.clone = function () {
+		var resultPlan = new ArtisanPlan(this.get_data());
+		var self = this;
+		resultPlan.date = self.date;
+		resultPlan.artisanTool = self.artisanTool;
+		resultPlan.rawMaterial = self.rawMaterial;
+		resultPlan.artisanGood = self.artisanGood;
+		resultPlan.hour = self.hour;
+		resultPlan.minute = self.minute;
+		resultPlan.isAM = self.isAM;
+		resultPlan.isUnsure = self.isUnsure;
+		resultPlan.amount = self.amount;
+		resultPlan.harvests = self.harvests;
+		resultPlan.processingTime = self.processingTime;
+		return resultPlan;
+	}
 
 	ArtisanPlan.prototype.get_artisan_good = function () {
 		let artisanGoodsInit = planner.artisan_good_list.filter((artisan_good) => artisan_good.artisanTool === this.artisanTool.id);
@@ -2177,35 +2342,51 @@ function planner_controller($scope){
 	ArtisanPlan.prototype.get_end_data = function () {
 		var result = {};
 		var progress = 0;
-		var hourProgress = this.hour;
-		var minuteProgress = this.minute;
+		var endHour = this.hour;
+		var endMinute = this.minute;
+		var endDay = 0;
 		var dayProgress = 0;
+		var hourProgress = 0;
+		var minuteProgress = 0;
 		while (progress < this.processingTime) {
+
+			endMinute += 10;
 			minuteProgress += 10;
 			progress += 10;
-			if (minuteProgress === 60) {
-				hourProgress++;
-				minuteProgress = 0;
+
+			if (endMinute === 60) {
+				endHour++;
+				endMinute = 0;
 			}
-			if (hourProgress === 24) {
-				hourProgress = 0;
+			if (endHour === 24) {
+				endHour = 0;
 			}
-			if (hourProgress === 2 && minuteProgress === 0) {
-				hourProgress = 6;
+			if (endHour === 2 && endMinute === 0) {
+				endHour = 6;
 				progress += 400;
-				dayProgress++;
+				hourProgress += 4;
+				endDay++;
 				continue;
 			}
 		}
-		result.hour = hourProgress;
-		result.minute = minuteProgress;
-		result.date = this.date + dayProgress;
+
+		hourProgress += Math.floor(minuteProgress / 60);
+		minuteProgress = minuteProgress % 60;
+		dayProgress += Math.floor(hourProgress / 24);
+		hourProgress = hourProgress % 24;
+
+		result.hour = endHour;
+		result.minute = endMinute;
+		result.date = this.date + endDay;
+		result.dayProgress = dayProgress;
+		result.hourProgress = hourProgress;
+		result.minuteProgress = minuteProgress;
 		return result;
 	}
 
-	ArtisanPlan.prototype.calculate_hour = function (isAM) {
+	ArtisanPlan.prototype.calculate_hour = function () {
 		var result = parseInt(this.hour) === 12 ? 0 : parseInt(this.hour);
-		if (!isAM || isAM === 'AM') {
+		if (!this.isAM || this.isAM === 'AM') {
 			return result;
 		}
 		result += 12;

@@ -166,9 +166,11 @@
 										<img ng-src="{{plan.crop.get_image(1)}}">
 										<div class="amount" ng-class="{'purple':plan.fertilizer.name != 'None'}">x{{plan.amount}}</div>
 									</div>
-									<img ng-if="plan.artisanTool" ng-src="{{plan.artisanTool.get_image()}}">
-									<img ng-if="plan.artisanTool" ng-src="{{plan.rawMaterial.get_image()}}">
-									<div ng-if="plan.artisanTool" class="amount">x{{plan.amount}}</div>
+									<div ng-if="plan.artisanTool" title="{{plan.rawMaterial.name + ' in ' + plan.artisanTool.name + ' at ' + self.display_time(plan.hour,plan.minute) + '\n' + plan.display_processing_time_title()}}">
+										<img ng-show="self.player.settings.show_artisan_tool" ng-src="{{plan.artisanTool.get_image()}}">
+										<img ng-src="{{plan.rawMaterial.get_image()}}">
+										<div class="amount">x{{plan.amount}}</div>
+									</div>
 								</div>
 								<div class="more" ng-show="self.cfarm().get_all_plans(date).length > self.cfarm().count_showable_plans(date)">{{self.cfarm().get_all_plans(date).length-self.cfarm().count_showable_plans(date)}} more...</div>
 							</div>
@@ -366,9 +368,11 @@
 					<div>
 						<h4>Miscellaneous</h4>
 						<label><input type="checkbox" ng-model="self.player.settings.show_events"> Show events on calendar</label>
-						
+						<br>
+						<label><input type="checkbox" ng-model="self.player.settings.show_artisan_tool"> Show artisan tools on calendar</label>
+
 						<br><br>
-						
+
 						<div class="btn btn-default" ng-click="self.clear_all()"><i class="fa fa-trash"></i> Clear Planner</div>
 					</div>
 					
@@ -562,11 +566,16 @@
 									</thead>
 									<tbody>
 										<tr class="crop" ng-repeat="plan in self.cfarm().plans[self.cdate]">
-											<td width="1">
+											<td ng-if="self.editplan!=plan" width="1">
 												<img ng-src="{{plan.crop.get_image(1)}}">
 											</td>
-											<td>
+											<td ng-if="self.editplan!=plan">
 												{{plan.crop.name}}
+											</td>
+											<td ng-if="self.editplan==plan" colspan="2">
+												<select class="form-control" ng-model="plan.crop_id"
+														ng-options="crop.id as crop.name for crop in self.crops_list | filter:self.planner_valid_crops">
+												</select>
 											</td>
 											<td>
 												<span ng-show="self.editplan!=plan">x{{plan.amount}}</span>
@@ -596,35 +605,93 @@
 								<table ng-show="self.cfarm().artisanPlans[self.cdate].length" class="crops table table-condensed">
 									<thead>
 										<tr>
-											<th colspan="2">Crop</th>
+											<th colspan="2">Artisan Tool</th>
+											<th>Raw Material</th>
 											<th>Amount</th>
-											<th>Fertilizer</th>
-											<th>Cost</th>
-											<th><i class="fa fa-clock-o"></i> Days</th>
+											<th>Starting Time</th>
+											<th><i class="fa fa-clock-o"></i> Processing Time</th>
 											<th width="1"></th>
 											<th width="1"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr class="crop" ng-repeat="plan in self.cfarm().artisanPlans[self.cdate]">
-											<td width="1">
+											<td ng-if="self.editplan!=plan" width="1">
 												<img ng-src="{{plan.artisanTool.get_image()}}">
 											</td>
-											<td>{{plan.artisanTool.name}}</td>
-											<td>
-												<span>x{{plan.amount}}</span>
+											<td ng-if="self.editplan!=plan">
+												{{plan.artisanTool.name}}
+											</td>
+											<td ng-if="self.editplan==plan" colspan="2">
+												<select class="form-control" ng-model="plan.artisanTool"
+														ng-options="artisanTool as artisanTool.name for artisanTool in self.artisan_tool_list"
+														ng-change="self.change_raw_materials(plan.artisanTool)">
+												</select>
 											</td>
 											<td>
-												<img ng-src="{{plan.rawMaterial.get_image()}}">
-												{{plan.rawMaterial.name}}
+												<div ng-if="self.editplan!=plan">
+													<img ng-src="{{plan.rawMaterial.get_image()}}">
+													{{plan.rawMaterial.name}}
+												</div>
+												<div ng-if="self.editplan==plan">
+													<select class="form-control" ng-model="plan.rawMaterial"
+															ng-options="rawMaterial as rawMaterial.name for rawMaterial in self.temp_raw_materials"
+															ng-disabled="self.is_empty(self.temp_raw_materials)">
+													</select>
+												</div>
 											</td>
-											<td>{{self.display_time(plan.hour,plan.minute)}}</td>
-											<td title="{{plan.display_processing_time_title()}}">
-												{{plan.processingTime}} min. 
+											<td>
+												<span ng-show="self.editplan!=plan">x{{plan.amount}}</span>
+												<span ng-show="self.editplan==plan">x<input style="padding-left:2px;width:100px" class="form-control" type="number" min="1" ng-model="plan.amount"></span>
+											</td>
+											<td ng-show="self.editplan!=plan">
+												<span>{{self.display_time(plan.hour,plan.minute)}}</span>
+											</td>
+											<td ng-show="self.editplan==plan" colspan="2">
+												<b>Time</b>
+												<i>(unsure?)</i>
+												<input type="checkbox"
+													   class="checkbox-inline"
+													   style="margin-top: 0px;"
+													   ng-model="plan.isUnsure">
+												<br>
+												<select class="form-control form-inline"
+														ng-model="plan.hour">
+													<option>1</option>
+													<option>2</option>
+													<option>3</option>
+													<option>4</option>
+													<option>5</option>
+													<option>6</option>
+													<option>7</option>
+													<option>8</option>
+													<option>9</option>
+													<option>10</option>
+													<option>11</option>
+													<option>12</option>
+												</select>
+												<b> : </b>
+												<select class="form-control form-inline"
+														ng-model="plan.minute">
+													<option>00</option>
+													<option>10</option>
+													<option>20</option>
+													<option>30</option>
+													<option>40</option>
+													<option>50</option>
+												</select>
+												<select class="form-control form-inline"
+														ng-model="plan.isAM">
+													<option>AM</option>
+													<option>PM</option>
+												</select>
+											</td>
+											<td ng-show="self.editplan!=plan" title="{{plan.display_processing_time_title()}}">
+												{{plan.processingTime}} min.
 												<i ng-if="plan.display_processing_time_title()" class="fa fa-info-circle"></i>
 											</td>
 											<td>
-												<div ng-disabled="true" ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
+												<div ng-show="self.editplan!=plan" class="btn btn-default" ng-click="self.edit_plan(plan)"><i class="fa fa-pencil"></i></div>
 												<div ng-show="self.editplan==plan" class="btn btn-success" ng-click="self.edit_plan(plan, 1)"><i class="fa fa-save"></i></div>
 											</td>
 											<td>
