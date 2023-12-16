@@ -38,7 +38,39 @@
 			"name": "Preserves Jar",
 			"processing_time": 4000,
 			"raw_materials": [
-				"blueberry"
+				"apricot",
+				"blackberry",
+				"blueberry",
+				"hot_pepper",
+				"qi_fruit",
+				"salmonberry",
+				"amaranth",
+				"artichoke",
+				"beet",
+				"bok_choy",
+				"cauliflower",
+				"corn",
+				"eggplant",
+				"fiddlehead_fern",
+				"garlic",
+				"green_bean",
+				"kale",
+				"parsnip",
+				"potato",
+				"radish",
+				"taro_root",
+				"tea_leaves",
+				"tomato",
+				"unmilled_rice",
+				"yam"
+			]
+		},
+		{
+			"id": "keg",
+			"name": "Keg",
+			"processing_time": 10000,
+			"raw_materials": [
+				
 			]
 		}
 	],
@@ -116,8 +148,290 @@
 			"sell": 22
 		},
 		{
+			"id": "apricot",
+			"name": "Apricot",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "blackberry",
+			"name": "Blackberry",
+			"buy": 11,
+			"sell": 22
+		},
+		{
 			"id": "blueberry",
 			"name": "Blueberry",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "hot_pepper",
+			"name": "Hot Pepper",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "qi_fruit",
+			"name": "Qi Fruit",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "salmonberry",
+			"name": "Salmonberry",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "amaranth",
+			"name": "Amaranth",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "artichoke",
+			"name": "Artichoke",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "beet",
+			"name": "Beet",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "bok_choy",
+			"name": "Bok Choy",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "cauliflower",
+			"name": "Cauliflower",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "corn",
+			"name": "Corn",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "eggplant",
+			"name": "Eggplant",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "fiddlehead_fern",
+			"name": "Fiddlehead Fern",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "garlic",
+			"name": "Garlic",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "green_bean",
+			"name": "Green Bean",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "kale",
+			"name": "Kale",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "parsnip",
+			"name": "Parsnip",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "potato",
+			"name": "Potato",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "radish",
+			"name": "Radish",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "taro_root",
+			"name": "Taro Root",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "tomato",
+			"name": "Tomato",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "unmilled_rice",
+			"name": "Unmilled Rice",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "yam",
+			"name": "Yam",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "wheat",
+			"name": "Wheat",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "coffee_bean",
+			"name": "Coffee Bean",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "tea_leaves",
+			"name": "Tea Leaves",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "pumpkin",
+			"name": "Pumpkin",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "red_cabbage",
+			"name": "Red Cabbage",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "honey",
+			"name": "Honey",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "hops",
+			"name": "Hops",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "ancient_fruit",
+			"name": "Ancient Fruit",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "apple",
+			"name": "Apple",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "banana",
+			"name": "Banana",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "cactus_fruit",
+			"name": "Cactus Fruit",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "cherry",
+			"name": "Cherry",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "coconut",
+			"name": "Coconut",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "cranberries",
+			"name": "Cranberries",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "crystal_fruit",
+			"name": "Crystal Fruit",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "grape",
+			"name": "Grape",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "mango",
+			"name": "Mango",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "melon",
+			"name": "Melon",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "orange",
+			"name": "Orange",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "peach",
+			"name": "Peach",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "pineapple",
+			"name": "Pineapple",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "pomegranate",
+			"name": "Pomegranate",
+			"buy": 11,
+			"sell": 22
+		},
+		{	"id": "rhubarb",
+			"name": "Rhubarb",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "spice_berry",
+			"name": "Spice Berry",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "starfruit",
+			"name": "Starfruit",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "strawberry",
+			"name": "Strawberry",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "wild_plum",
+			"name": "Wild Plum",
 			"buy": 11,
 			"sell": 22
 		}
@@ -192,11 +506,140 @@
 			]
 		},
 		{
-			"id": "blueberry_jelly",
-			"name": "Blueberry Jelly",
+			"id": "jelly",
+			"name": "Jelly",
 			"artisan_tool": "preserves_jar",
 			"ingredients": [
-				"blueberry"
+				"apricot",
+				"blackberry",
+				"blueberry",
+				"hot_pepper",
+				"qi_fruit",
+				"salmonberry"
+			]
+		},
+		{
+			"id": "pickles",
+			"name": "Pickles",
+			"artisan_tool": "preserves_jar",
+			"ingredients": [
+				"amaranth",
+				"artichoke",
+				"beet",
+				"bok_choy",
+				"cauliflower",
+				"corn",
+				"eggplant",
+				"fiddlehead_fern",
+				"garlic",
+				"green_bean",
+				"kale",
+				"parsnip",
+				"potato",
+				"radish",
+				"taro_root",
+				"tea_leaves",
+				"tomato",
+				"unmilled_rice",
+				"yam"
+			]
+		},
+		{
+			"id": "beer",
+			"name": "Beer",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "wheat",
+					"processing_time" :  1750
+				}
+			]
+		},
+		{
+			"id": "coffee",
+			"name": "Coffee",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "coffee_bean",
+					"processing_time" :  120
+				}
+			]
+		},
+		{
+			"id": "green_tea",
+			"name": "Green Tea",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "tea_leaves",
+					"processing_time" :  180
+				}
+			]
+		},
+		{
+			"id": "juice",
+			"name": "Juice",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "pumpkin",
+					"processing_time" :  6000
+				},
+				{
+					"id": "red_cabbage",
+					"processing_time" :  6000
+				}
+				
+			]
+		},
+		{
+			"id": "mead",
+			"name": "Mead",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "honey",
+					"processing_time" :  600
+				}
+			]
+		},
+		{
+			"id": "pale_ale",
+			"name": "Pale Ale",
+			"artisan_tool": "keg",
+			"ingredients": [
+				{
+					"id": "hops",
+					"processing_time" :  2250
+				}
+			]
+		},
+		{
+			"id": "wine",
+			"name": "Wine",
+			"artisan_tool": "keg",
+			"ingredients": [
+				"ancient_fruit",
+				"apple",
+				"banana",
+				"cactus_fruit",
+				"cherry",
+				"coconut",
+				"cranberries",
+				"crystal_fruit",
+				"grape",
+				"mango",
+				"melon",
+				"orange",
+				"peach",
+				"pineapple",
+				"pomegranate",
+				"rhubarb",
+				"spice_berry",
+				"starfruit",
+				"strawberry",
+				"wild_plum"
 			]
 		}
 	],
