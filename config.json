@@ -32,6 +32,14 @@
 				"void_egg",
 				"dinosaur_egg"
 			]
+		},
+		{
+			"id": "preserves_jar",
+			"name": "Preserves Jar",
+			"processing_time": 4000,
+			"raw_materials": [
+				"blueberry"
+			]
 		}
 	],
 	"raw_materials": [
@@ -106,6 +114,12 @@
 			"name": "Dinosaur Egg",
 			"buy": 11,
 			"sell": 22
+		},
+		{
+			"id": "blueberry",
+			"name": "Blueberry",
+			"buy": 11,
+			"sell": 22
 		}
 	],
 	"artisan_goods": [
@@ -175,6 +189,14 @@
 					"id": "dinosaur_egg",
 					"processing_time" :  4620
 				}
+			]
+		},
+		{
+			"id": "blueberry_jelly",
+			"name": "Blueberry Jelly",
+			"artisan_tool": "preserves_jar",
+			"ingredients": [
+				"blueberry"
 			]
 		}
 	],
