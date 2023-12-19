@@ -98,6 +98,47 @@
 				"wheat",
 				"wild_plum"
 			]
+		},
+		{
+			"id": "silver_star_cask",
+			"name": "Silver Star Cask",
+			"processing_time": 1000,
+			"raw_materials": [
+				"beer",
+				"cheese",
+				"goat_cheese",
+				"mead",
+				"pale_ale",
+				"wine"
+			]
+		}
+		,
+		{
+			"id": "gold_star_cask",
+			"name": "Gold Star Cask",
+			"processing_time": 1000,
+			"raw_materials": [
+				"beer",
+				"cheese",
+				"goat_cheese",
+				"mead",
+				"pale_ale",
+				"wine"
+			]
+		}
+		,
+		{
+			"id": "iridium_star_cask",
+			"name": "Iridium Star Cask",
+			"processing_time": 1000,
+			"raw_materials": [
+				"beer",
+				"cheese",
+				"goat_cheese",
+				"mead",
+				"pale_ale",
+				"wine"
+			]
 		}
 	],
 	"raw_materials": [
@@ -460,6 +501,36 @@
 			"name": "Wild Plum",
 			"buy": 11,
 			"sell": 22
+		},
+		{
+			"id": "beer",
+			"name": "Beer",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "goat_cheese",
+			"name": "Goat Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "mead",
+			"name": "Mead",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "pale_ale",
+			"name": "Pale Ale",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "wine",
+			"name": "Wine",
+			"buy": 11,
+			"sell": 22
 		}
 	],
 	"artisan_goods": [
@@ -666,6 +737,204 @@
 				"starfruit",
 				"strawberry",
 				"wild_plum"
+			]
+		},
+		{
+			"id": "silver_wine",
+			"name": "Silver Star Wine",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "wine",
+					"processing_time" :  22400
+				}
+			]
+		},
+		{
+			"id": "gold_wine",
+			"name": "Gold Star Wine",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "wine",
+					"processing_time" :  44800
+				}
+			]
+		},
+		{
+			"id": "iridium_wine",
+			"name": "Iridium Star Wine",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "wine",
+					"processing_time" :  89600
+				}
+			]
+		},
+		{
+			"id": "silver_pale_ale",
+			"name": "Silver Star Pale Ale",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "pale_ale",
+					"processing_time" :  14400
+				}
+			]
+		},
+		{
+			"id": "gold_pale_ale",
+			"name": "Gold Star Pale Ale",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "pale_ale",
+					"processing_time" :  27200
+				}
+			]
+		},
+		{
+			"id": "iridium_pale_ale",
+			"name": "Iridium Star Pale Ale",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "pale_ale",
+					"processing_time" :  54400
+				}
+			]
+		},
+		{
+			"id": "silver_beer",
+			"name": "Silver Star Beer",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "beer",
+					"processing_time" :  11200
+				}
+			]
+		},
+		{
+			"id": "gold_beer",
+			"name": "Gold Star Beer",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "beer",
+					"processing_time" :  22400
+				}
+			]
+		},
+		{
+			"id": "iridium_beer",
+			"name": "Iridium Star Beer",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "beer",
+					"processing_time" :  44800
+				}
+			]
+		},
+		{
+			"id": "silver_mead",
+			"name": "Silver Star Mead",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "mead",
+					"processing_time" :  11200
+				}
+			]
+		},
+		{
+			"id": "gold_mead",
+			"name": "Gold Star Mead",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "mead",
+					"processing_time" :  22400
+				}
+			]
+		},
+		{
+			"id": "iridium_mead",
+			"name": "Iridium Star Mead",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "mead",
+					"processing_time" :  44800
+				}
+			]
+		},
+		{
+			"id": "silver_cheese",
+			"name": "Silver Star Cheese",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "cheese",
+					"processing_time" :  4800
+				}
+			]
+		},
+		{
+			"id": "gold_cheese",
+			"name": "Gold Star Cheese",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "cheese",
+					"processing_time" :  11200
+				}
+			]
+		},
+		{
+			"id": "iridium_cheese",
+			"name": "Iridium Star Cheese",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "cheese",
+					"processing_time" :  22400
+				}
+			]
+		},
+		{
+			"id": "silver_goat_cheese",
+			"name": "Silver Star Goat Cheese",
+			"artisan_tool": "silver_star_cask",
+			"ingredients": [
+				{
+					"id": "goat_cheese",
+					"processing_time" :  4800
+				}
+			]
+		},
+		{
+			"id": "gold_goat_cheese",
+			"name": "Gold Star Goat Cheese",
+			"artisan_tool": "gold_star_cask",
+			"ingredients": [
+				{
+					"id": "goat_cheese",
+					"processing_time" :  11200
+				}
+			]
+		},
+		{
+			"id": "iridium_goat_cheese",
+			"name": "Iridium Star Goat Cheese",
+			"artisan_tool": "iridium_star_cask",
+			"ingredients": [
+				{
+					"id": "goat_cheese",
+					"processing_time" :  22400
+				}
 			]
 		}
 	],
