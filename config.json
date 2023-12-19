@@ -509,6 +509,12 @@
 			"sell": 22
 		},
 		{
+			"id": "cheese",
+			"name": "Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
 			"id": "goat_cheese",
 			"name": "Goat Cheese",
 			"buy": 11,
