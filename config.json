@@ -764,6 +764,10 @@
 				{
 					"id": "wine",
 					"processing_time" :  44800
+				},
+				{
+					"id": "silver_star_wine",
+					"processing_time" :  22400
 				}
 			]
 		},
@@ -775,6 +779,14 @@
 				{
 					"id": "wine",
 					"processing_time" :  89600
+				},
+				{
+					"id": "silver_star_wine",
+					"processing_time" :  67200
+				},
+				{
+					"id": "gold_star_wine",
+					"processing_time" :  44800
 				}
 			]
 		},
@@ -797,6 +809,10 @@
 				{
 					"id": "pale_ale",
 					"processing_time" :  27200
+				},
+				{
+					"id": "silver_star_pale_ale",
+					"processing_time" :  12800
 				}
 			]
 		},
@@ -808,6 +824,14 @@
 				{
 					"id": "pale_ale",
 					"processing_time" :  54400
+				},
+				{
+					"id": "silver_star_pale_ale",
+					"processing_time" :  40000
+				},
+				{
+					"id": "gold_star_pale_ale",
+					"processing_time" :  27200
 				}
 			]
 		},
@@ -830,6 +854,10 @@
 				{
 					"id": "beer",
 					"processing_time" :  22400
+				},
+				{
+					"id": "silver_star_beer",
+					"processing_time" :  11200
 				}
 			]
 		},
@@ -841,6 +869,14 @@
 				{
 					"id": "beer",
 					"processing_time" :  44800
+				},
+				{
+					"id": "silver_star_beer",
+					"processing_time" :  33600
+				},
+				{
+					"id": "gold_star_beer",
+					"processing_time" :  22400
 				}
 			]
 		},
@@ -863,6 +899,10 @@
 				{
 					"id": "mead",
 					"processing_time" :  22400
+				},
+				{
+					"id": "silver_star_mead",
+					"processing_time" :  11200
 				}
 			]
 		},
@@ -874,6 +914,14 @@
 				{
 					"id": "mead",
 					"processing_time" :  44800
+				},
+				{
+					"id": "mead",
+					"processing_time" :  33600
+				},
+				{
+					"id": "mead",
+					"processing_time" :  22400
 				}
 			]
 		},
@@ -896,6 +944,10 @@
 				{
 					"id": "cheese",
 					"processing_time" :  11200
+				},
+				{
+					"id": "silver_star_cheese",
+					"processing_time" :  6400
 				}
 			]
 		},
@@ -907,6 +959,14 @@
 				{
 					"id": "cheese",
 					"processing_time" :  22400
+				},
+				{
+					"id": "silver_star_cheese",
+					"processing_time" :  17600
+				},
+				{
+					"id": "gold_star_cheese",
+					"processing_time" :  11200
 				}
 			]
 		},
@@ -929,6 +989,10 @@
 				{
 					"id": "goat_cheese",
 					"processing_time" :  11200
+				},
+				{
+					"id": "silver_star_goat_cheese",
+					"processing_time" :  6400
 				}
 			]
 		},
@@ -940,6 +1004,14 @@
 				{
 					"id": "goat_cheese",
 					"processing_time" :  22400
+				},
+				{
+					"id": "silver_star_goat_cheese",
+					"processing_time" :  17600
+				},
+				{
+					"id": "gold_star_goat_cheese",
+					"processing_time" :  11200
 				}
 			]
 		}
