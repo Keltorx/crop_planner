@@ -527,8 +527,32 @@
 			"sell": 22
 		},
 		{
+			"id": "silver_star_beer",
+			"name": "Silver Star Beer",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_beer",
+			"name": "Gold Star Beer",
+			"buy": 11,
+			"sell": 22
+		},
+		{
 			"id": "cheese",
 			"name": "Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "silver_star_cheese",
+			"name": "Silver Star Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_cheese",
+			"name": "Gold Star Cheese",
 			"buy": 11,
 			"sell": 22
 		},
@@ -539,8 +563,32 @@
 			"sell": 22
 		},
 		{
+			"id": "silver_star_goat_cheese",
+			"name": "Silver Star Goat Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_goat_cheese",
+			"name": "Gold Star Goat Cheese",
+			"buy": 11,
+			"sell": 22
+		},
+		{
 			"id": "mead",
 			"name": "Mead",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "silver_star_mead",
+			"name": "Silver Star Mead",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_mead",
+			"name": "Gold Star Mead",
 			"buy": 11,
 			"sell": 22
 		},
@@ -551,8 +599,32 @@
 			"sell": 22
 		},
 		{
+			"id": "silver_star_pale_ale",
+			"name": "Silver Star Pale Ale",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_pale_ale",
+			"name": "Gold Star Pale Ale",
+			"buy": 11,
+			"sell": 22
+		},
+		{
 			"id": "wine",
 			"name": "Wine",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "silver_star_wine",
+			"name": "Silver Star Wine",
+			"buy": 11,
+			"sell": 22
+		},
+		{
+			"id": "gold_star_wine",
+			"name": "Gold Star Wine",
 			"buy": 11,
 			"sell": 22
 		}
