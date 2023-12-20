@@ -119,11 +119,17 @@
 			"processing_time": 1000,
 			"raw_materials": [
 				"beer",
+				"silver_star_beer",
 				"cheese",
+				"silver_star_cheese",
 				"goat_cheese",
+				"silver_star_goat_cheese",
 				"mead",
+				"silver_star_mead",
 				"pale_ale",
-				"wine"
+				"silver_star_pale_ale",
+				"wine",
+				"silver_star_wine"
 			]
 		}
 		,
@@ -133,11 +139,23 @@
 			"processing_time": 1000,
 			"raw_materials": [
 				"beer",
+				"silver_star_beer",
+				"gold_star_beer",
 				"cheese",
+				"silver_star_cheese",
+				"gold_star_cheese",
 				"goat_cheese",
+				"silver_star_goat_cheese",
+				"gold_star_goat_cheese",
 				"mead",
+				"silver_star_mead",
+				"gold_star_mead",
 				"pale_ale",
-				"wine"
+				"silver_star_pale_ale",
+				"gold_star_pale_ale",
+				"wine",
+				"silver_star_wine",
+				"gold_star_wine"
 			]
 		}
 	],
